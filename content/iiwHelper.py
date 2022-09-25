@@ -11,7 +11,7 @@ class Pixel:
     b : int
 
 @dataclass
-class Image:
+class ImagePPM:
     width:int
     height:int
     pixels:list[Pixel]
@@ -62,12 +62,12 @@ def loadImage(path):
     height: int = int(dimensionsAndPixels[1])
     for i in range(3,len(dimensionsAndPixels)-1,3):
         allPixels.append(Pixel(int(dimensionsAndPixels[i]),int(dimensionsAndPixels[i+1]),int(dimensionsAndPixels[i+2])))
-    return Image(width, height ,allPixels)
+    return ImagePPM(width, height ,allPixels)
 
 
 
 def saveImage(img,path):
-    f = open(path, "w+")
+    f = open(path, "w")
     f.write("P3\n")
     f.write("#created by my wonderfull app !\n")
     f.write(f'{img.width} {img.height} 255\n')
