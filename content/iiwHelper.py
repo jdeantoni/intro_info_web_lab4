@@ -3,8 +3,21 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import os
 
+from dataclasses import dataclass
+@dataclass
+class Pixel:
+    r : int
+    g : int
+    b : int
 
-def showImage(path):
+@dataclass
+class Image:
+    width:int
+    height:int
+    pixels:list[Pixel]
+
+
+def showImageFromPath(path):
     img = cv2.imread(path)
     # Remember, opencv by default reads images in BGR rather than RGB
     # So we fix that by the following
@@ -13,7 +26,18 @@ def showImage(path):
     img2 = Image.open(".temp.png")
     img2.show()
     os.remove(".temp.png") 
-    
+
+def showImage(imgppm):
+    saveImage(imgppm, '.temp.ppm')
+    img = cv2.imread('.temp.ppm')
+    # Remember, opencv by default reads images in BGR rather than RGB
+    # So we fix that by the following
+    img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    cv2.imwrite(".temp.png",img) 
+    img2 = Image.open(".temp.png")
+    img2.show()
+    os.remove(".temp.png") 
+    os.remove('.temp.ppm')
 
 def loadImage(path):
     allPixels = []
@@ -34,21 +58,21 @@ def loadImage(path):
             dimensionsAndPixels.append(w)
 
 
-    height=dimensionsAndPixels[0]
-    width=dimensionsAndPixels[1]
+    width: int = int(dimensionsAndPixels[0])
+    height: int = int(dimensionsAndPixels[1])
     for i in range(3,len(dimensionsAndPixels)-1,3):
-        allPixels.append(Pixel(dimensionsAndPixels[i],dimensionsAndPixels[i+1],dimensionsAndPixels[i+2]))
-    return Image(height,width,allPixels)
+        allPixels.append(Pixel(int(dimensionsAndPixels[i]),int(dimensionsAndPixels[i+1]),int(dimensionsAndPixels[i+2])))
+    return Image(width, height ,allPixels)
 
 
 
 def saveImage(img,path):
-    f = open(path, "w")
+    f = open(path, "w+")
     f.write("P3\n")
     f.write("#created by my wonderfull app !\n")
-    f.write(f'{img.height} {img.width} 255\n')
-    for i in range(3,len(img.pixels)-1,3):
-        f.write(img.pixels[i],img.pixels[i+1],img.pixels[i+2],"\n")
+    f.write(f'{img.width} {img.height} 255\n')
+    for i in range(3,len(img.pixels)-1):
+        f.write(f'{img.pixels[i].r}\n{img.pixels[i].g}\n{img.pixels[i].b}\n')
 
 
 
