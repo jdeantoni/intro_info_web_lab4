@@ -57,7 +57,6 @@ def loadImage(path):
         for w in line.split():
             dimensionsAndPixels.append(w)
 
-
     width: int = int(dimensionsAndPixels[0])
     height: int = int(dimensionsAndPixels[1])
     for i in range(3,len(dimensionsAndPixels)-1,3):
@@ -71,7 +70,7 @@ def saveImage(img,path):
     f.write("P3\n")
     f.write("#created by my wonderfull app !\n")
     f.write(f'{img.width} {img.height} 255\n')
-    for i in range(3,len(img.pixels)-1):
+    for i in range(0,len(img.pixels)):
         f.write(f'{img.pixels[i].r}\n{img.pixels[i].g}\n{img.pixels[i].b}\n')
 
 
